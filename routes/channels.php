@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -11,19 +12,20 @@ use Illuminate\Support\Facades\Broadcast;
 | application supports. The given channel authorization callbacks are
 | used to check if an authenticated user can listen to the channel.
 |
-*/
+ */
 
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-// This is only for testing purposes
 Broadcast::channel('testchannel', function ($user) {
     return true;
-}); 
-
-// This is probably closer to what most would use in production
-Broadcast::channel('user.{id}', function ($user, $id) {
-    //return true if api user is authenticated
-    return (int) $user->id === (int) $id;
 });
+
+Broadcast::channel('privatetestchannel.{conversation_id}', function ($user, $conversation_id) {
+    return true;
+});
+
+// Broadcast::channel('testchannel.{conversation_id}', function ($user, $conversation_id) {
+//         return Auth::check();
+// });

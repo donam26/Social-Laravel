@@ -20,8 +20,7 @@
         </style>
     </head>
     <body>
-        <img src="{{ asset('storage/images/1697275898bea6fabcc532056c5c2316.jpg') }}" alt="Hình ảnh" srcset="">
-        <img src="{{ asset('storage/images/1697275898bea6fabcc532056c5c2316.jpg') }}" alt="Hình ảnh" srcset="">
+        <img src="{{ asset('storage/images/1698645807d08d10f872b5b1ebe8a43.jpg') }}" alt="Hình ảnh" srcset="">
 
     </body>
 </html>

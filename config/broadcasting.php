@@ -29,7 +29,6 @@ return [
     */
 
     'connections' => [
-
         'pusher' => [
             'driver' => 'pusher',
             'key' => env('PUSHER_APP_KEY'),
@@ -39,7 +38,7 @@ return [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 //'useTLS' => false,
                 'encrypted' => true,
-                'host' => '127.0.0.1',
+                'host' => 'admin.idfakesocial.com',
                 'port' => 6001,
                 'scheme' => 'http',
             ],

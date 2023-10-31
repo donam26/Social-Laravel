@@ -19,7 +19,7 @@ class ConversationController extends Controller
     public function listMess()
     {
         $user_id = auth()->user()->id;
-        $listMess = $this->participant->where('user_id',$user_id)->with('conversation.latestMessage')->with('user')->get();
+        $listMess = $this->participant->select('id','user_id','conversation_id')->where('user_id',$user_id)->with('conversation.latestMessage')->with('user:id,name,image')->get();
         return response()->json($listMess);
     }
 

@@ -9,20 +9,18 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Message;
 
-class Test implements ShouldBroadcast
+class Test2 implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    protected $message;
     public function __construct()
     {
-      // $this->message= $message;
+      //
     }
 
     public function broadcastOn()
     {
-        return new PrivateChannel('privatetestchannel.1');
+        return new PrivateChannel('testchannel2');
     }
 }

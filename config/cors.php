@@ -14,21 +14,12 @@ return [
     | To learn more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
     |
     */
-
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
-
-    'allowed_methods' => ['*'],
-
-    'allowed_origins' => ['*'],
-
-    'allowed_origins_patterns' => [],
-
+    'paths' => ['api/*', 'broadcasting/auth'],
+    'allowed_methods' => ['GET', 'POST'],
+    'allowed_origins' => ['http://profile.idfakesocial.com'],
     'allowed_headers' => ['*'],
-
     'exposed_headers' => [],
-
     'max_age' => 0,
-
     'supports_credentials' => false,
-
+    
 ];
