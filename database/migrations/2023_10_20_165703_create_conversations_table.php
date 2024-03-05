@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('conversations', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
+            $table->string('image')->nullable();
+            $table->integer('created_user');
             $table->timestamps();
         });
     }
@@ -29,4 +31,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('conversations');
     }
+
 };

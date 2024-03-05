@@ -13,33 +13,39 @@ class UsersTableSeeder extends Seeder
     {
         DB::table('users')->insert([
             'name' => 'Hoàng La',
-            'email' => 'hoanglai11@gmail.com',
+            'email' => 'hoanglai1411@gmail.com',
             'password' => Hash::make('123123'),
+            'image' => 'man.jpg',
         ]);
         DB::table('users')->insert([
             'name' => 'Khải Đe',
-            'email' => 'khaiden11@gmail.com',
+            'email' => 'khaiden1241@gmail.com',
             'password' => Hash::make('123123'),
+            'image' => 'man.jpg',
         ]);
         DB::table('users')->insert([
             'name' => 'Hoàng ai',
-            'email' => 'hoanglai2@gmail.com',
+            'email' => 'hoanglai342@gmail.com',
             'password' => Hash::make('123123'),
+            'image' => 'man.jpg',
         ]);
         DB::table('users')->insert([
             'name' => 'Khải en',
-            'email' => 'khaiden2@gmail.com',
+            'email' => 'khaiden243@gmail.com',
             'password' => Hash::make('123123'),
+            'image' => 'man.jpg',
         ]);
         DB::table('users')->insert([
             'name' => 'Hoàn Lai',
-            'email' => 'hoanglai3@gmail.com',
+            'email' => 'hoanglai343@gmail.com',
             'password' => Hash::make('123123'),
+            'image' => 'man.jpg',
         ]);
         DB::table('users')->insert([
             'name' => 'Khả Đen',
-            'email' => 'khaiden3@gmail.com',
+            'email' => 'khaiden3443@gmail.com',
             'password' => Hash::make('123123'),
+            'image' => 'man.jpg',
         ]);
     }
 }

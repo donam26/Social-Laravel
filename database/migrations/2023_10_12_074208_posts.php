@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->string('image')->nullable();
             $table->integer('status');
+            $table->integer('group_id');
             $table->timestamps();
         });
     }

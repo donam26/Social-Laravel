@@ -8,6 +8,7 @@ use App\Models\Like;
 
 class LikeController extends Controller
 {
+    protected $like;
     public function __construct(Like $like)
     {
         $this->like = $like;
@@ -32,7 +33,6 @@ class LikeController extends Controller
             ]);
             return response()->json(['success'=>'Da thich']);
         }
-        return 'ok';
     }
 
 }

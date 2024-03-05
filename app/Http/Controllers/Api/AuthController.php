@@ -18,16 +18,38 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login()
+    public function login(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email|max:255',
+            'password' => 'required|string|min:6',
+        ], [
+            'password.required' => 'Vui lòng điền mật khẩu',
+            'email.required' => 'Vui lòng điền email',
+            'email.email' => 'Định dạng email sai',
+        ]);
         $credentials = request(['email', 'password']);
 
         if (!$token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Thông tin chưa đúng. Kiểm tra lại!',
+            ], 401);
         }
 
-        return $this->respondWithToken($token);
+        $user = auth()->user();
+
+        return response()->json([
+            'id' => $user->id,
+            'name' => $user->name,
+            'sex' => $user->sex,
+            'address' => $user->address,
+            'email' => $user->email,
+            'image' => $user->image,
+            'access_token' => $token,
+        ]);
     }
+
 
     public function me()
     {
@@ -43,7 +65,10 @@ class AuthController extends Controller
     {
         auth()->logout();
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return response()->json([
+            'status' => 'Erorr',
+            'message' => 'Successfully logged out'
+        ]);
     }
 
     /**
@@ -75,7 +100,7 @@ class AuthController extends Controller
     public function updateUser(Request $request, $id)
     {
         $user = User::findOrFail($id);
-        
+
         $data = [
             'name' => $request->name,
             'sex' => $request->sex,
@@ -83,7 +108,7 @@ class AuthController extends Controller
         ];
         if ($request->file('image')) {
             $imageName = $request->file('image');
-            $imageFullName =  time(). $imageName->getClientOriginalName();
+            $imageFullName =  time() . $imageName->getClientOriginalName();
             $request->file('image')->storeAs('public/images', $imageFullName);
             $data['image'] = $imageFullName;
         }
@@ -91,6 +116,7 @@ class AuthController extends Controller
         $user->update($data);
         return response()->json([
             'success' => 'Success',
+            'data' => $user
         ]);
     }
 }

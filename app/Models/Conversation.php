@@ -11,6 +11,8 @@ class Conversation extends Model
 
     protected $fillable = [
         'name',
+        'image',
+        'created_user',
     ];
 
     public function messages()

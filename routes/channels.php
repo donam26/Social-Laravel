@@ -18,14 +18,30 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('testchannel', function ($user) {
+Broadcast::channel('conversation.{conversation_id}', function ($user,$conversation_id) {
     return true;
 });
 
-Broadcast::channel('privatetestchannel.{conversation_id}', function ($user, $conversation_id) {
+Broadcast::channel('AddGroupToUser.{user_id}', function ($user,$conversation_id) {
     return true;
 });
 
-// Broadcast::channel('testchannel.{conversation_id}', function ($user, $conversation_id) {
-//         return Auth::check();
-// });
+Broadcast::channel('ToUser.{user_id}', function ($user,$conversation_id) {
+    return true;
+});
+
+Broadcast::channel('NotificationMember.{user_id}', function ($user,$conversation_id) {
+    return true;
+});
+
+Broadcast::channel('RequestMember.{user_id}', function () {
+    return true;
+});
+
+Broadcast::channel('FeelBeLongTo.{user_id}', function () {
+    return true;
+});
+
+Broadcast::channel('feel.{id}', function ($user,$id) {
+    return true;
+}); 

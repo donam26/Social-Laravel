@@ -101,7 +101,8 @@ return [
     |
     */
 
-    'ttl' => env('JWT_TTL', 60),
+    'ttl' => env('JWT_TTL', 365 * 24 * 60 * 60), // Thời gian hết hạn là 365 ngày
+
 
     /*
     |--------------------------------------------------------------------------
@@ -119,8 +120,8 @@ return [
     | systems in place to revoke the token if necessary.
     |
     */
-
-    'refresh_ttl' => env('JWT_REFRESH_TTL', 20160),
+    'exp' => 0, // Thời gian hết hạn của token, 0 là không giới hạn
+    'refresh_ttl' => 0,
 
     /*
     |--------------------------------------------------------------------------

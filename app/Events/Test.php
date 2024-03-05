@@ -15,14 +15,15 @@ class Test implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    protected $message;
-    public function __construct()
+    public $message;
+    public function __construct(Message $message)
     {
-      // $this->message= $message;
+      $this->message = $message;
     }
 
     public function broadcastOn()
     {
-        return new PrivateChannel('privatetestchannel.1');
+        return new PrivateChannel('conversation.' . $this->message->conversation_id);
     }
 }
+ 

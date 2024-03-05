@@ -25,6 +25,7 @@ class User extends Authenticatable implements JWTSubject
         'image',
         'sex',
         'address',
+        'group_id',
     ];
 
     /**
@@ -81,4 +82,13 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Friend::class);
     }
+    public function friendCount()
+    {
+        return $this->friends()->count();
+    }
+    public function group()
+    {
+        return $this->belongsToMany(Group::class);
+    }
+    
 }
