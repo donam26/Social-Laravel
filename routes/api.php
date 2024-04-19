@@ -51,6 +51,7 @@ Route::group([
     Route::post('deleteFeel', [PostController::class, 'deleteFeel']);
     Route::post('hiddenFeel', [PostController::class, 'hiddenFeel']);
     Route::post('displayFeel', [PostController::class, 'displayFeel']);
+    Route::post('reportFeel', [PostController::class, 'reportFeel']);
     
     //Likes
     Route::post('/like', [LikeController::class, 'store']);
@@ -67,6 +68,9 @@ Route::group([
     Route::post('/addFriend/{id}', [FriendController::class, 'friendRequest']);
     Route::post('/acceptFriend/{id}', [FriendController::class, 'acceptFriend']);
     Route::post('/cancelFriend/{id}', [FriendController::class, 'cancelFriend']);
+    Route::post('/cancelRequest/{id}', [FriendController::class, 'cancelRequest']);
+    Route::post('/acceptFriendNoti/{id}', [FriendController::class, 'acceptFriendNoti']);
+    Route::post('/cancelRequestNoti/{id}', [FriendController::class, 'cancelRequestNoti']);
 
     //Message
     Route::get('/listMess', [ConversationController::class, 'listMess']);

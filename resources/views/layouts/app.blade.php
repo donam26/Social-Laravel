@@ -110,14 +110,24 @@
                 </ul>
             </li>
             <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
-                <svg class="nav-icon">
-                    <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-cursor') }}"></use>
-                </svg> Thông báo</a>
-            <ul class="nav-group-items">
-                <li class="nav-item"><a class="nav-link" href="#"><span
-                            class="nav-icon"></span> Danh sách</a></li>
-            </ul>
-        </li>
+                    <svg class="nav-icon">
+                        <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-cursor') }}"></use>
+                    </svg> Thông báo</a>
+                <ul class="nav-group-items">
+                    <li class="nav-item"><a class="nav-link" href="#"><span class="nav-icon"></span> Danh
+                            sách</a></li>
+                </ul>
+            </li>
+            <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
+                    <svg class="nav-icon">
+                        <use xlink:href="{{ asset('vendors/@coreui/icons/svg/free.svg#cil-cursor') }}"></use>
+                    </svg> Báo cáo</a>
+                <ul class="nav-group-items">
+                    <li class="nav-item"><a class="nav-link" href="{{ route('admin.violates') }}"><span
+                                class="nav-icon"></span> Danh
+                            sách</a></li>
+                </ul>
+            </li>
 
         </ul>
         <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>

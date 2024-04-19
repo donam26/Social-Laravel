@@ -8,6 +8,7 @@ use App\Models\Like;
 use App\Models\Friend;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Violate;
 
 class PostController extends Controller
 {
@@ -20,7 +21,7 @@ class PostController extends Controller
     public function index()
     {
         $user_id = auth()->user()->id;
-        $posts = $this->post->where('user_id', $user_id)->where('status', 1)->get();
+        $posts = $this->post->where('user_id', $user_id)->where('status', 1)->where('group_id', 0)->get();
         return response()->json($posts);
     }
 
@@ -42,7 +43,8 @@ class PostController extends Controller
             }
             $data['image'] = $imagePaths[0];
         }
-        if($request->group_id != 0) {
+
+        if ($request->group_id != 0) {
             $data['status'] = 0;
             $post = $user_id->posts()->create($data);
             return response()->json([
@@ -51,7 +53,7 @@ class PostController extends Controller
                 'data' => $post->load('user')->load('likes')->load('comments.user')
             ]);
         } else {
-            $data['status'] = 1;
+            $data['status'] = $request->status;
             $post = $user_id->posts()->create($data);
             return response()->json([
                 'success' => 'Success',
@@ -71,17 +73,28 @@ class PostController extends Controller
 
         $user_id_post = array_merge($friendId1, $friendId2);
 
-        $feels = $this->post->whereIn('user_id', $user_id_post)->orWhere('user_id', Auth::id())->where('group_id',0)->where('status', 1)->with('user')->with('likes')->with('comments.user')->orderBy('created_at', 'desc')->get();
+        $feels = $this->post
+            ->where('status', 1)
+            ->where('group_id', 0)
+            ->whereIn('user_id', $user_id_post)
+            ->orWhere('user_id', Auth::id())
+            ->with('user')
+            ->with('likes')
+            ->with('comments.user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return response()->json([
             'status' => 'success',
             'data' => $feels,
         ]);
     }
 
+
     public function myFeel()
     {
         $user_id = Auth::id();
-        $feels = $this->post->where('user_id', $user_id)->where('group_id',0)->with('user')->with('likes')->with('comments.user')->orderByDesc('created_at')->get();
+        $feels = $this->post->where('user_id', $user_id)->where('group_id', 0)->with('user')->with('likes')->with('comments.user')->orderByDesc('created_at')->get();
         return response()->json([
             'status' => 'success',
             'data' => $feels,
@@ -89,13 +102,13 @@ class PostController extends Controller
     }
     public function groupFeels($id)
     {
-        $feels = $this->post->where('group_id',$id)->where('status', 1)->with('user')->with('likes')->with('comments.user')->orderByDesc('created_at')->get();
+        $feels = $this->post->where('group_id', $id)->where('status', 1)->with('user')->with('likes')->with('comments.user')->orderByDesc('created_at')->get();
         return response()->json([
             'status' => 'success',
             'data' => $feels,
-        ]);    
+        ]);
     }
-    
+
 
     public function hiddenFeel(Request $request)
     {
@@ -130,10 +143,10 @@ class PostController extends Controller
             'message' => 'Đã duyệt bài viết',
         ]);
     }
-    public function feel(Request $request, $id) 
+    public function feel(Request $request, $id)
     {
         $feel = Post::where('id', $id)->where('status', 1)->with('user')->with('likes')->with('comments.user')->first();
-        if($feel===null) {
+        if ($feel === null) {
             return response()->json([
                 'status' => 'limit',
                 'message' => 'Bài viết bị hạn chế, không thể xem!',
@@ -147,24 +160,42 @@ class PostController extends Controller
 
     public function dataFeel(Request $request)
     {
-        $pageNumber = 1;    
+        $pageNumber = 1;
         $perPage = 10;
-        if($request->has('page')) {
+        if ($request->has('page')) {
             $pageNumber = $request->input('page');
         }
-        $listFeel = Post::where('status',1)->where('title', 'like', '%' . $request->input('name') . '%')->with('user')->get();
+        $listFeel = Post::where('status', 1)->where('title', 'like', '%' . $request->input('name') . '%')->with('user')->get();
         return response()->json([
             'status' => 'success',
             'data' => $listFeel,
         ]);
     }
 
-    public function userFeel($id) 
+    public function userFeel($id)
     {
-        $feels = $this->post->where('user_id',$id)->where('status', 1)->with('user')->with('likes')->with('comments.user')->orderByDesc('created_at')->get();
+        $feels = $this->post->where('user_id', $id)->where('status', 1)->with('user')->with('likes')->with('comments.user')->orderByDesc('created_at')->get();
         return response()->json([
             'status' => 'success',
             'data' => $feels,
-        ]);  
+        ]);
+    }
+
+    public function reportFeel(Request $request)
+    {
+        $user_id = auth()->user();
+        $feel = Post::where('id', $request->feel_id)->get();
+        $data = [
+            'accuser' => $user_id->id,
+            'feel_id' => $request->feel_id,
+            'content' => $request->content,
+        ];
+        Violate::create($data);
+
+        return response()->json([
+            'success' => 'Success',
+            'message' => 'Đã gửi báo cáo tới quản trị viên',
+        ]);
     }
 }
+

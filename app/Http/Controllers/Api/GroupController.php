@@ -64,7 +64,6 @@ class GroupController extends Controller
         } else {
             $data['image'] = 'GroupPeople.jpg';
         }
-        $data['image'] = 'GroupPeople.jpg';
 
         $group = Group::create($data);
         $user = User::find(Auth::id());
@@ -79,7 +78,7 @@ class GroupController extends Controller
     {
         $group = Group::find($group_id);
         $user_ids = $request->input('user_ids');
-        $users = User::whereIn('id', $user_ids)->get();
+        $users = User::whereIn('id', $user_ids)->get(); 
 
         $group->user()->attach($user_ids, ['status' => 0]);
         foreach ($users as $user) {

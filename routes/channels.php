@@ -42,6 +42,14 @@ Broadcast::channel('FeelBeLongTo.{user_id}', function () {
     return true;
 });
 
+Broadcast::channel('RequestAddFriend.{user_id}', function () {
+    return true;
+});
+
 Broadcast::channel('feel.{id}', function ($user,$id) {
+    return true;
+}); 
+
+Broadcast::channel('NotificationViolate.{id}', function ($user,$id) {
     return true;
 }); 

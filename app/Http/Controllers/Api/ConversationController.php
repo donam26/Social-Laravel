@@ -29,9 +29,9 @@ class ConversationController extends Controller
             ->whereIn('id', $conversationIds)
             ->with(['latestMessage', 'participants' => function ($query) use ($user_id) {
                 $query->where('user_id', '!=', $user_id);
-            }, 'participants.user']) // Load the user for the participants
+            }, 'participants.user'])
             ->get();
-        
+
         return response()->json([
             'status' => 'success',
             'data' => $listMess,
@@ -40,7 +40,7 @@ class ConversationController extends Controller
 
     public function createGroupChat(Request $request)
     {
-        
+
         $user_id = auth()->user()->id;
         $participant_ids = $request->input('participant_ids');
         $participantIdsArray = explode(',', $participant_ids);
@@ -49,10 +49,11 @@ class ConversationController extends Controller
             'name' => $request->input('name'),
             'created_user' => $user_id,
         ];
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->input('image');
-        } else {
-            $data['image'] = 'group-people.jpg';
+        if ($request->file('image')) {
+            $imageName = $request->file('image');
+            $imageFullName =  time() . $imageName->getClientOriginalName();
+            $request->file('image')->storeAs('public/images', $imageFullName);
+            $data['image'] = $imageFullName;
         }
         $conversation = $this->conversation->create($data);
         if ($conversation) {
@@ -61,7 +62,7 @@ class ConversationController extends Controller
                     'user_id' => $participant,
                     'conversation_id' => $conversation->id,
                 ]);
-                broadcast(new AddGroupToUser($conversation,$participant));
+                broadcast(new AddGroupToUser($conversation, $participant));
             };
             return response()->json([
                 'status' => 'success',
@@ -75,32 +76,47 @@ class ConversationController extends Controller
         ]);
     }
 
-    // public function addConversation(Request $request)
-    // {
-    //     $id_auth = auth()->user()->id;
-    //     $user_id = $request->input('user_id');
-    //     $name = $request->input('name');
-
-    //     $conversationCheck = $this->conversation
-    //         ->where(function ($query) use ($user1Id, $user2Id) {
-    //             $query->where('user_id', $user1Id)
-    //                 ->where('receiver_id', $user2Id);
-    //         })->orWhere(function ($query) use ($user1Id, $user2Id) {
-    //             $query->where('user_id', $user2Id)
-    //                 ->where('receiver_id', $user1Id);
-    //         })->first();
-
-    //     if (!$conversationCheck) {
-    //         $newConver = $this->conversation->create([
-    //             'user_id' => $user_id,
-    //             'name' => $name,
-    //         ]);
-    //         $newConver->participants()->create([
-    //             'user_id' => $user_id,
-    //         ]);
-    //     }
-    //     return response()->json(['succes' => 'Tao cuoc tro chuyen thanh cong']);
-    // }
+    public function addConversation(Request $request)
+    {
+        $user = Auth::user();
+        $friend_id = $request->input('user_id');
+        $userParticipantIds = Participant::where('user_id', $user->id)->pluck('conversation_id');
+        $user2ParticipantIds = Participant::where('user_id', $friend_id)->pluck('conversation_id');
+        $commonConversations = $userParticipantIds->intersect($user2ParticipantIds);
+        $conversation = Conversation::whereIn('id', $commonConversations)
+            ->whereHas('participants', function ($query) {
+                $query->select('conversation_id')
+                    ->groupBy('conversation_id')
+                    ->havingRaw('COUNT(*) = 2');
+            })
+            ->first();
+        if (!$conversation) {
+            $newConversation = Conversation::create([
+                'name' => null,
+                'image' => null,
+                'created_user' => $user->id,
+            ]);
+            Participant::create([
+                'user_id' => $user->id,
+                'conversation_id' => $newConversation->id,
+            ]);
+            Participant::create([
+                'user_id' => $friend_id,
+                'conversation_id' => $newConversation->id,
+            ]);
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Create New',
+                'data' =>  $newConversation,
+            ]);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Redirect',
+            'data' =>  $conversation,
+        ]);
+    }
 
     public function getMessage($id_conver)
     {

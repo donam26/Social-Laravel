@@ -22,7 +22,7 @@ class Group extends Model
      */
     public function user()
     {
-        return $this->belongsToMany(User::class, 'created_user', 'id');
+        return $this->belongsToMany(User::class );
     }
 
     public function createdUser()

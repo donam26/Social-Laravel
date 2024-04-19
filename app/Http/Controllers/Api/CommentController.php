@@ -31,6 +31,8 @@ class CommentController extends Controller
             'content' => $content,
             'status' => 1,
         ]);
+        if($post->user_id != $user->id) {
+
         $notification = Notification::create([
             'user_id' => $post->user_id,
             'member_name' => $user->name,
@@ -43,6 +45,7 @@ class CommentController extends Controller
             'link' => '/feel/' . $postId,
         ]);
         broadcast(new CommentFeel ($post, $notification));
+    }
 
         return response()->json([
             'status' => 'success',
